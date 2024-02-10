@@ -1,8 +1,14 @@
-import http from "http";
+import http from "node:http";
+import { URL } from "node:url";
 
-function start() {
+function start(route) {
   function onRequest(request, response) {
-    console.log("Request received.");
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    const pathname = url.pathname;
+    console.log("Request for " + pathname + " received.");
+
+    route(pathname);
+
     response.writeHead(200, { "Content-Type": "text/plain" });
     response.write("Hello World");
     response.end();
