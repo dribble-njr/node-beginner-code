@@ -1,4 +1,5 @@
 import querystring from "node:querystring";
+import fs from "node:fs";
 
 function start(response, postData) {
   console.log("Request handler 'start' was called.");
@@ -29,7 +30,23 @@ function upload(response, postData) {
   response.end();
 }
 
+function show(response) {
+  console.log("Request handler 'show' was called.");
+  fs.readFile("./tmp/test.jpeg", "binary", (error, file) => {
+    if (error) {
+      response.writeHead(500, { "Content-Type": "text/plain" });
+      response.write(error + "\n");
+      response.end();
+    } else {
+      response.writeHead(200, { "Content-Type": "image/jpeg" });
+      response.write(file, "binary");
+      response.end();
+    }
+  });
+}
+
 export default {
   start,
   upload,
+  show,
 };
